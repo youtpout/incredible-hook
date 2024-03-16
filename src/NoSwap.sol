@@ -43,7 +43,7 @@ contract NoSwap is BaseHook {
     bool odd = false;
 
     function setOdd(bool val) public {
-        odd =val;
+        odd = val;
     }
 
     /// @notice Constant sum swap via custom accounting, tokens are exchanged 1:1
@@ -54,7 +54,6 @@ contract NoSwap is BaseHook {
         bytes calldata
     ) external override returns (bytes4) {
         odd=!odd;
-        console2.log("odd",odd);
         if (odd) {
             // prevent normal v4 swap logic from executing
             return Hooks.NO_OP_SELECTOR;
