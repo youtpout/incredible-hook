@@ -57,9 +57,9 @@ contract NoSwap is BaseHook {
         IPoolManager.SwapParams calldata params,
         bytes calldata hookData
     ) external override returns (bytes4) {
-        bool swap = abi.decode(hookData, bool);
+        bool swap = abi.decode(hookData, (bool));
         if (swap) {
-            return Hooks.NO_OP_SELECTOR;
+            return BaseHook.beforeSwap.selector;
         } else {
             // prevent normal v4 swap logic from executing
             return Hooks.NO_OP_SELECTOR;

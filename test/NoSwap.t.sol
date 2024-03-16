@@ -70,38 +70,27 @@ contract NoSwapTest is HookTest {
         token1.approve(address(hook), type(uint256).max);
     }
 
-    function test_csmm_gas() public {
-        int256 amount = 1e18;
-        bool zeroForOne = true;
-        uint256 gasBefore = gasleft();
-        swap(poolKey, amount, zeroForOne, ZERO_BYTES);
-        uint256 gasAfter = gasleft();
-        uint256 gasUsed = gasBefore - gasAfter;
-        console2.log("csmm gas used: ", gasUsed);
-    }
 
     function test_multiswap_gas() public {
-        swapTokenWithLog();
-        swapTokenWithLog();
-        swapTokenWithLog();
-        swapTokenWithLog();
+        swapTokenWithLog(false);
+        swapTokenWithLog(true);
+        swapTokenWithLog(false);
+        swapTokenWithLog(true);
     }
 
-    function test_Odd() public {
-        hook.setOdd(true);
-        swapTokenWithLog();
+    function test_Swap() public {
+        swapTokenWithLog(true);
     }
 
-    function test_Even() public {
-        hook.setOdd(false);
-        swapTokenWithLog();
+    function test_NoOp() public {
+        swapTokenWithLog(false);
     }
 
-    function swapTokenWithLog() internal {
+    function swapTokenWithLog(bool doSwap) internal {
         int256 amount = 1e18;
         bool zeroForOne = true;
         uint256 gasBefore = gasleft();
-        swap(poolKey, amount, zeroForOne, ZERO_BYTES);
+        swap(poolKey, amount, zeroForOne, abi.encode(doSwap));
         uint256 gasAfter = gasleft();
         uint256 gasUsed = gasBefore - gasAfter;
         console2.log("swap gas used: ", gasUsed);
