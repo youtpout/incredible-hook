@@ -46,18 +46,23 @@ contract NoSwap is BaseHook {
         odd = val;
     }
 
+    mapping(uint256 => IPoolManager.SwapParams[]) waitingSwap;
+    uint256 index;
+    uint256 maxWaitingSwap = 10;
+
     /// @notice Constant sum swap via custom accounting, tokens are exchanged 1:1
     function beforeSwap(
         address,
         PoolKey calldata key,
         IPoolManager.SwapParams calldata params,
-        bytes calldata
+        bytes calldata hookData
     ) external override returns (bytes4) {
-        odd=!odd;
-        if (odd) {
+        bool swap = abi.decode(hookData, bool);
+        if (swap) {
+            return Hooks.NO_OP_SELECTOR;
+        } else {
             // prevent normal v4 swap logic from executing
             return Hooks.NO_OP_SELECTOR;
         }
-         return BaseHook.beforeSwap.selector;
     }
 }
